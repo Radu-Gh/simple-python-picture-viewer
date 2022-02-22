@@ -1,0 +1,82 @@
+#:kivy 1.1.0
+
+Root:
+    image_file: image_file
+    grayscale_button: grayscale_button
+    binarize_button: binarize_button
+
+    BoxLayout:
+        orientation: "vertical"
+
+        BoxLayout:
+            Image:
+                id: image_file
+                source: root.current_image
+
+        BoxLayout:
+            size_hint_y: None
+            height: 30
+            Button:
+                text: "Load"
+                on_release: root.show_load()
+
+            Button:
+                id: grayscale_button
+                text: "Grayscale"
+                disabled: True
+                on_release: root.convert_grayscale()
+
+            Button:
+                id: binarize_button
+                text: "Binarize"
+                disabled: True
+                on_release: root.show_threshold()
+
+<LoadDialog>:
+    BoxLayout:
+        size: root.size
+        pos: root.pos
+        orientation: "vertical"
+        FileChooserIconView:
+            id: filechooser
+            path: root.current_path
+
+        BoxLayout:
+            size_hint_y: None
+            height: 30
+            Button:
+                text: "Cancel"
+                on_release: root.cancel()
+
+            Button:
+                text: "Load"
+                on_release: root.load(filechooser.path, filechooser.selection)
+
+<ThresholdDialog>
+    BoxLayout:
+        size: root.size
+        pos: root.pos
+        orientation: "horizontal"
+        Label:
+            font_size: 16
+            text: "First threshold:"
+
+        TextInput:
+            id: first_th
+            text: '128'
+
+        Label:
+            font_size: 16
+            text: "Second threshold:"
+
+        TextInput:
+            id: second_th
+            text: '128'
+
+        Button:
+            text: "Process"
+            on_release: root.process(int(first_th.text), int(second_th.text))
+
+        Button:
+            text: "Cancel"
+            on_release: root.cancel()
